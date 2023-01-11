@@ -7,39 +7,39 @@ const chatContainer = document.querySelector("#chat_container");
 let loadInterval;
 
 function loader(element) {
-  element.textContent = "";
+    element.textContent = "";
 
-  loadInterval = setInterval(() => {
-    element.textContent += ".";
+    loadInterval = setInterval(() => {
+        element.textContent += ".";
 
-    if (element.textContent === "....") {
-      element.textContent = "";
-    }
-  }, 300);
+        if (element.textContent === "....") {
+            element.textContent = "";
+        }
+    }, 300);
 }
 
 function typeText(element, text) {
-  let index = 0;
+    let index = 0;
 
-  let interval = setInterval(() => {
-    if (index < text.length) {
-      element.innerHTML += text.charAt(index);
-      index++;
-    } else {
-      clearInterval(interval);
-    }
-  }, 20);
+    let interval = setInterval(() => {
+        if (index < text.length) {
+            element.innerHTML += text.charAt(index);
+            index++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 20);
 }
 
 function generateUID() {
-  const timeStamp = Date.now();
-  const randomNum = Math.random();
-  const hex = randomNum.toString(16);
-  return `id-${timeStamp}-${hex}`;
+    const timeStamp = Date.now();
+    const randomNum = Math.random();
+    const hex = randomNum.toString(16);
+    return `id-${timeStamp}-${hex}`;
 }
 
 function chatStripe(isAi, value, uniqueId) {
-  return `
+    return `
       <div class="wrapper ${isAi && "ai"}">
           <div class="chat">
               <div class="profile">
@@ -53,52 +53,52 @@ function chatStripe(isAi, value, uniqueId) {
       </div>
   `;
 }
-const handleSubmit = async (e) => {
-  e.preventDefault();
+const handleSubmit = async(e) => {
+    e.preventDefault();
 
-  const data = new FormData(form);
+    const data = new FormData(form);
 
-  //User's message
-  chatContainer.innerHTML += chatStripe(false, data.get("prompt"));
-  form.reset();
+    //User's message
+    chatContainer.innerHTML += chatStripe(false, data.get("prompt"));
+    form.reset();
 
-  //Bot's message
-  const UID = generateUID();
-  chatContainer.innerHTML += chatStripe(true, " ", UID);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
+    //Bot's message
+    const UID = generateUID();
+    chatContainer.innerHTML += chatStripe(true, " ", UID);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 
-  const messageDiv = document.getElementById(UID);
-  loader(messageDiv);
+    const messageDiv = document.getElementById(UID);
+    loader(messageDiv);
 
-  //Fetch bot's response
-  const response = await fetch('https://codegpt-o0vx.onrender.com', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      prompt: data.get("prompt")
-    })
-  });
-  
-  clearInterval(loadInterval);
-  messageDiv.innerHTML = '';
+    //Fetch bot's response
+    const response = await fetch('https://africaremembers.onrender.com', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            prompt: data.get("prompt")
+        })
+    });
 
-  if (response.ok) {
-    const data = await response.json();
-    const parsedData = data.bot.trim();
-    typeText(messageDiv, parsedData);
-  } else {
-    const err = await response.text();
-    messageDiv.innerHTML = "Somehing went wrong."
-    alert(err);
-  }
+    clearInterval(loadInterval);
+    messageDiv.innerHTML = '';
+
+    if (response.ok) {
+        const data = await response.json();
+        const parsedData = data.bot.trim();
+        typeText(messageDiv, parsedData);
+    } else {
+        const err = await response.text();
+        messageDiv.innerHTML = "Somehing went wrong."
+        alert(err);
+    }
 
 };
 
 form.addEventListener("submit", handleSubmit);
 form.addEventListener("keyup", (e) => {
-  if ((e.keyCode === 13) | (e.key === "Enter")) {
-    handleSubmit(e);
-  }
+    if ((e.keyCode === 13) | (e.key === "Enter")) {
+        handleSubmit(e);
+    }
 });
