@@ -22,7 +22,7 @@ app.get("/", async(req, res) => {
 
 app.post("/", async(req, res) => {
     try {
-        const u_prompt = "Amon: " + req.body.prompt + "\n\n###\n\n";
+        const u_prompt = "Young African: " + req.body.prompt + "\n\n###\n\n";
         const i_prompt = uuidv4() + "\nConversation between a young African and Kwame Nkrumah. \
         Kwame Nkrumah is a politician, political theorist, \
         and revolutionary, and an influential advocate of Pan-Africanism, \
